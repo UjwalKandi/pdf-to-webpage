@@ -59,10 +59,10 @@ st.markdown("""
         color: #1a1a1a !important;
     }
     
-    /* Clean button styling */
+    /* Clean button styling - Soft Light Blue */
     .stButton > button {
-        background-color: #0066cc !important;
-        color: white !important;
+        background-color: #a8d4f4 !important;
+        color: #1a1a1a !important;
         border: none !important;
         border-radius: 6px;
         padding: 0.6rem 1.2rem;
@@ -71,7 +71,7 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background-color: #0052a3 !important;
+        background-color: #7ec5f0 !important;
     }
     
     /* Tab styling */
@@ -208,10 +208,14 @@ st.markdown("""
         margin: 1.5rem 0;
     }
     
-    /* Download button */
+    /* Download button - Soft Light Blue */
     .stDownloadButton > button {
-        background-color: #0066cc !important;
-        color: white !important;
+        background-color: #a8d4f4 !important;
+        color: #1a1a1a !important;
+    }
+    
+    .stDownloadButton > button:hover {
+        background-color: #7ec5f0 !important;
     }
     
     /* Spinner text */
