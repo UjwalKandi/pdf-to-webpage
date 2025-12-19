@@ -1,0 +1,400 @@
+"""
+PDF to Webpage Converter - Streamlit App (Production Ready)
+Minimalistic design with dark/light theme
+"""
+
+import streamlit as st
+import os
+from pathlib import Path
+from scripts.extract_pdf import SimplePDFExtractor
+from scripts.markdown_convert import MarkdownConverter
+from scripts.generate_html import HTMLGenerator
+import json
+from datetime import datetime
+
+# ==================== CONFIG ====================
+
+st.set_page_config(
+    page_title="PDF to Webpage",
+    page_icon="📄",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# ==================== THEME (WITHOUT RERUN) ====================
+
+if 'theme' not in st.session_state:
+    st.session_state.theme = 'light'
+
+def apply_theme():
+    """Apply dark/light theme - NO RERUN"""
+    if st.session_state.theme == 'dark':
+        bg = "#0d1117"
+        bg_sec = "#161b22"
+        text = "#e6edf3"
+        text_sec = "#8b949e"
+        accent = "#58a6ff"
+    else:
+        bg = "#ffffff"
+        bg_sec = "#f6f8fb"
+        text = "#1a1a1a"
+        text_sec = "#666666"
+        accent = "#0066cc"
+    
+    st.markdown(f"""
+    <style>
+    body {{ background: {bg}; color: {text}; }}
+    [data-testid="stMainBlockContainer"] {{ background: {bg}; }}
+    .stButton > button {{ background: {accent}; color: white; border: none; border-radius: 6px; font-weight: 600; }}
+    .stButton > button:hover {{ opacity: 0.9; }}
+    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {{ color: {accent}; border-bottom: 2px solid {accent}; }}
+    .success-box {{ background: rgba(40, 167, 69, 0.1); border: 1px solid #28a745; padding: 12px; border-radius: 6px; margin: 10px 0; }}
+    .error-box {{ background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; padding: 12px; border-radius: 6px; margin: 10px 0; }}
+    .info-box {{ background: rgba(0, 102, 204, 0.1); border: 1px solid {accent}; padding: 12px; border-radius: 6px; margin: 10px 0; }}
+    .subtitle {{ color: {text_sec}; font-size: 0.95em; margin: 0.5em 0 0 0; }}
+    h1, h2, h3 {{ color: {text}; }}
+    </style>
+    """, unsafe_allow_html=True)
+
+apply_theme()
+
+# ==================== SESSION STATE ====================
+
+if 'step' not in st.session_state:
+    st.session_state.step = 0
+if 'extracted' not in st.session_state:
+    st.session_state.extracted = None
+if 'markdown_content' not in st.session_state:
+    st.session_state.markdown_content = None
+if 'html_content' not in st.session_state:
+    st.session_state.html_content = None
+if 'uploaded_file' not in st.session_state:
+    st.session_state.uploaded_file = None
+
+# ==================== HELPER FUNCTIONS ====================
+
+def show_success(msg):
+    st.markdown(f'<div class="success-box">✓ {msg}</div>', unsafe_allow_html=True)
+
+def show_error(msg):
+    st.markdown(f'<div class="error-box">✗ {msg}</div>', unsafe_allow_html=True)
+
+def show_info(msg):
+    st.markdown(f'<div class="info-box">ℹ {msg}</div>', unsafe_allow_html=True)
+
+def safe_extract(pdf_path):
+    """Safe PDF extraction"""
+    try:
+        extractor = SimplePDFExtractor()
+        extracted = extractor.extract_from_pdf(pdf_path)
+        return extracted, None
+    except Exception as e:
+        return None, str(e)
+
+def safe_convert(content):
+    """Safe markdown conversion"""
+    try:
+        converter = MarkdownConverter()
+        markdown = converter.convert_content(content)
+        return markdown, None
+    except Exception as e:
+        return None, str(e)
+
+def safe_generate_html(markdown, title):
+    """Safe HTML generation"""
+    try:
+        generator = HTMLGenerator()
+        html = generator.generate_html(markdown, title)
+        return html, None
+    except Exception as e:
+        return None, str(e)
+
+# ==================== HEADER ====================
+
+header_col1, header_col2 = st.columns([1, 0.1])
+
+with header_col1:
+    st.markdown("""
+        <div>
+            <h1 style='margin: 0;'>📄 PDF to Webpage</h1>
+            <p class='subtitle'>Convert PDFs to beautiful webpages • Powered by PyPDF2 & Streamlit</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with header_col2:
+    # Toggle theme WITHOUT rerun
+    if st.button("🌙" if st.session_state.theme == 'light' else "☀️", help="Toggle theme", key="theme_btn"):
+        st.session_state.theme = 'dark' if st.session_state.theme == 'light' else 'light'
+        st.rerun()
+
+st.divider()
+
+# ==================== TABS ====================
+
+tab1, tab2, tab3 = st.tabs(["📥 Convert", "👀 Preview", "❓ Help"])
+
+# ==================== TAB 1: CONVERT ====================
+
+with tab1:
+    st.markdown("### Step 1: Upload PDF")
+    
+    uploaded_file = st.file_uploader("Choose PDF", type=["pdf"], label_visibility="collapsed")
+    
+    if uploaded_file:
+        st.session_state.uploaded_file = uploaded_file
+        
+        pdf_path = Path("temp_uploads") / uploaded_file.name
+        pdf_path.parent.mkdir(exist_ok=True)
+        
+        with open(pdf_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        
+        show_success(f"{uploaded_file.name} ({uploaded_file.size / (1024*1024):.2f} MB)")
+        
+        st.divider()
+        
+        # Step 2: Extract
+        st.markdown("### Step 2: Extract Text")
+        
+        if st.button("🔍 Extract", key="btn_extract", use_container_width=True):
+            with st.spinner("Extracting..."):
+                extracted, error = safe_extract(str(pdf_path))
+                
+                if error:
+                    show_error(f"Extraction failed: {error}")
+                else:
+                    st.session_state.extracted = extracted
+                    st.session_state.step = max(st.session_state.step, 1)
+                    
+                    pages = len(extracted)
+                    chars = sum(p.get('char_count', 0) for p in extracted)
+                    show_success(f"Extracted {pages} pages ({chars:,} characters)")
+                    st.rerun()
+        
+        # Step 3: Markdown
+        if st.session_state.extracted:
+            st.markdown("### Step 3: Convert to Markdown")
+            
+            if st.button("📝 Convert", key="btn_convert", use_container_width=True):
+                with st.spinner("Converting..."):
+                    markdown, error = safe_convert(st.session_state.extracted)
+                    
+                    if error:
+                        show_error(f"Conversion failed: {error}")
+                    else:
+                        converter = MarkdownConverter()
+                        markdown = converter.add_metadata(
+                            markdown,
+                            title=uploaded_file.name.replace('.pdf', ''),
+                            author="PDF to Webpage",
+                            date=datetime.now().strftime("%Y-%m-%d")
+                        )
+                        st.session_state.markdown_content = markdown
+                        st.session_state.step = max(st.session_state.step, 2)
+                        show_success("Markdown generated")
+                        st.rerun()
+        
+        # Step 4: HTML
+        if st.session_state.markdown_content:
+            st.markdown("### Step 4: Generate HTML")
+            
+            page_title = st.text_input(
+                "Page Title",
+                value=uploaded_file.name.replace('.pdf', ''),
+                label_visibility="collapsed"
+            )
+            
+            if st.button("🎨 Generate", key="btn_generate", use_container_width=True):
+                with st.spinner("Generating..."):
+                    html, error = safe_generate_html(st.session_state.markdown_content, page_title)
+                    
+                    if error:
+                        show_error(f"HTML generation failed: {error}")
+                    else:
+                        st.session_state.html_content = html
+                        st.session_state.step = max(st.session_state.step, 3)
+                        show_success("HTML generated! Check Preview tab")
+                        st.rerun()
+        
+        # Step 5: Download
+        if st.session_state.html_content:
+            st.divider()
+            st.markdown("### Step 5: Download")
+            
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.download_button(
+                    "📥 HTML",
+                    st.session_state.html_content,
+                    "index.html",
+                    "text/html",
+                    use_container_width=True
+                )
+            
+            with col2:
+                st.download_button(
+                    "📝 Markdown",
+                    st.session_state.markdown_content,
+                    "content.md",
+                    "text/markdown",
+                    use_container_width=True
+                )
+            
+            with col3:
+                st.download_button(
+                    "📦 JSON",
+                    json.dumps(st.session_state.extracted, ensure_ascii=False, indent=2),
+                    "data.json",
+                    "application/json",
+                    use_container_width=True
+                )
+
+# ==================== TAB 2: PREVIEW ====================
+
+with tab2:
+    if st.session_state.html_content or st.session_state.uploaded_file:
+        left_col, right_col = st.columns(2)
+        
+        with left_col:
+            st.markdown("### 📄 Uploaded PDF")
+            
+            if st.session_state.uploaded_file:
+                st.markdown(f"**{st.session_state.uploaded_file.name}**")
+                st.markdown(f"Size: {st.session_state.uploaded_file.size / (1024*1024):.2f} MB")
+            
+            # EXTRACTION STATS
+            st.markdown("#### Extraction Stats")
+            if st.session_state.extracted:
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.metric("Pages", len(st.session_state.extracted))
+                with col_b:
+                    total_chars = sum(p.get('char_count', 0) for p in st.session_state.extracted)
+                    st.metric("Characters", f"{total_chars:,}")
+                
+                total_lines = sum(p.get('line_count', 0) for p in st.session_state.extracted)
+                st.metric("Lines", total_lines)
+                
+                with st.expander("View Details"):
+                    for idx, page in enumerate(st.session_state.extracted, 1):
+                        chars = page.get('char_count', 0)
+                        lines = page.get('line_count', 0)
+                        st.write(f"**Page {idx}:** {lines} lines, {chars} chars")
+            else:
+                show_info("Extract PDF to see stats")
+            
+            # MARKDOWN STATS
+            st.markdown("#### Markdown Stats")
+            if st.session_state.markdown_content:
+                lines = st.session_state.markdown_content.split('\n')
+                headings = len([l for l in lines if l.startswith('#')])
+                lists = len([l for l in lines if l.startswith('-')])
+                
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.metric("Lines", len(lines))
+                with col_b:
+                    st.metric("Headings", headings)
+                
+                st.metric("Lists", lists)
+            else:
+                show_info("Convert to Markdown to see stats")
+        
+        with right_col:
+            st.markdown("### 🌐 Generated Webpage")
+            
+            if st.session_state.html_content:
+                st.components.v1.html(st.session_state.html_content, height=600, scrolling=True)
+            else:
+                show_info("Generate HTML to see preview")
+    else:
+        show_info("Upload a PDF in the Convert tab to see preview")
+
+# ==================== TAB 3: HELP ====================
+
+with tab3:
+    st.markdown("### 📚 About This Tool")
+    
+    with st.expander("🛠️ Technology Stack", expanded=True):
+        st.markdown("""
+        #### Core Technologies
+        
+        **🔵 PyPDF2** - Fast, reliable PDF text extraction
+        - Extracts text content from PDF documents
+        - No external dependencies like Poppler
+        - Works on all operating systems
+        
+        **📊 Markdown** - Clean, structured formatting
+        - Converts extracted text to readable Markdown
+        - Automatic heading and list detection
+        - Easy to edit and version control
+        
+        **🎨 Streamlit** - Modern web app framework
+        - Beautiful, responsive user interface
+        - Dark/light theme support
+        - Real-time preview capabilities
+        
+        **🌐 HTML5 + CSS** - Professional webpages
+        - Responsive design (mobile & desktop)
+        - Clean, semantic HTML structure
+        - Modern CSS with dark mode support
+        """)
+    
+    with st.expander("❓ FAQ", expanded=False):
+        st.markdown("""
+        **Q: How do I deploy to GitHub Pages?**
+        A: Download HTML → Create GitHub repo → Upload index.html → Enable Pages
+        
+        **Q: Why is extraction slow?**
+        A: Large PDFs take longer. This is normal behavior.
+        
+        **Q: Does it work offline?**
+        A: Yes! No internet needed after the app loads.
+        
+        **Q: Can I edit the HTML?**
+        A: Yes! Download and edit in any text editor.
+        
+        **Q: What PDF formats work?**
+        A: Text-based PDFs work best. Scanned PDFs (images) may have limited results.
+        """)
+    
+    with st.expander("🚀 Getting Started", expanded=False):
+        st.markdown("""
+        1. **Upload** a PDF file
+        2. **Extract** text from the PDF
+        3. **Convert** to Markdown format
+        4. **Generate** beautiful HTML
+        5. **Download** and deploy to GitHub Pages
+        
+        #### Deploy to GitHub Pages
+        
+        1. Create new repository: `username.github.io`
+        2. Upload `index.html` file
+        3. Enable GitHub Pages in repository settings
+        4. Your site is live at `https://username.github.io`
+        """)
+    
+    with st.expander("🔗 Resources & Links", expanded=False):
+        st.markdown("""
+        #### Official Documentation
+        - [PyPDF2 Documentation](https://pypdf2.readthedocs.io/)
+        - [Markdown Guide](https://www.markdownguide.org/)
+        - [Streamlit Documentation](https://docs.streamlit.io/)
+        - [GitHub Pages Guide](https://pages.github.com/)
+        
+        #### Learn More
+        - [HTML Basics](https://developer.mozilla.org/en-US/docs/Web/HTML)
+        - [CSS Guide](https://developer.mozilla.org/en-US/docs/Web/CSS)
+        - [Web Design Best Practices](https://www.w3.org/Design/)
+        """)
+
+# ==================== FOOTER ====================
+
+st.divider()
+st.markdown("""
+    <div style="text-align: center; color: gray; font-size: 0.85em;">
+        <p>Made with ❤️ using <strong>Streamlit</strong> • Powered by <strong>PyPDF2</strong> & <strong>HTML5</strong></p>
+        <p style="margin: 0.5em 0 0 0; font-size: 0.8em;">📄 PDF to Webpage Converter | Open Source Project</p>
+    </div>
+""", unsafe_allow_html=True)

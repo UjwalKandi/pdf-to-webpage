@@ -1,0 +1,22 @@
+# Core
+streamlit
+
+# PDF Processing (without poppler dependency)
+PyPDF2
+
+# OCR (optional - can be disabled)
+paddleocr
+paddlepaddle
+
+# Image
+Pillow
+
+# API
+requests
+python-dotenv
+
+pdf2image
+# Note: If you want to use pdf2image, you need to install poppler separately.
+
+# ERNIE SDK
+erniebot
