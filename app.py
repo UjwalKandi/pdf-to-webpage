@@ -111,12 +111,24 @@ st.markdown("""
         border: 1px solid #e0e0e0 !important;
     }
     
-    /* File uploader - Remove border */
+    /* File uploader - Remove all borders and outlines */
     [data-testid="stFileUploader"] {
         background-color: #e8e8e8 !important;
         border: none !important;
         padding: 2rem !important;
         border-radius: 8px;
+    }
+    
+    /* Remove dotted outline from file uploader container */
+    [data-testid="stFileUploader"] > div {
+        border: none !important;
+        outline: none !important;
+    }
+    
+    /* Remove focus outline */
+    [data-testid="stFileUploader"]:focus-within {
+        outline: none !important;
+        border: none !important;
     }
     
     /* File uploader text - dark */
