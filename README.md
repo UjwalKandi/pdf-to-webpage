@@ -1,4 +1,4 @@
-# 📄 DocWeb - PDF to Webpage Converter - Streamlit Edition
+# 📄 DocWeb - PDF to Webpage Converter
 
 Transform PDFs into beautiful, responsive webpages using PaddleOCR and ERNIE AI. Built with Streamlit for an intuitive, modern interface.
 
