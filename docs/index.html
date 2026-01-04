@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UJWAL KANDI - Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d3748;
+            --secondary: #4a5568;
+            --accent: #4299e1;
+            --light: #f7fafc;
+            --border: #e2e8f0;
+            --shadow: rgba(145, 158, 171, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--primary);
+            background-color: #ffffff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .contact-info {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .contact-info span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px var(--shadow), 0 2px 4px -1px var(--shadow);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .location {
+            font-size: 0.95rem;
+            color: var(--secondary);
+            font-style: italic;
+        }
+        
+        ul {
+            margin-top: 1rem;
+            margin-left: 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.75rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            border-top: 1px solid var(--border);
+        }
+        
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            section {
+                padding: 1.2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>UJWAL KANDI</h1>
+        <div class="contact-info">
+            <span>🔻 (737) 326-8598</span>
+            <span>💚 Austin, Texas</span>
+            <span>📧 <a href="mailto:ujwal.kandi@utexas.edu">ujwal.kandi@utexas.edu</a></span>
+            <span>ⓘ <a href="https://linkedin.com/in/ujwalkandi" target="_blank">linkedin.com/in/ujwalkandi</a></span>
+            <span>📧 <a href="https://www.ujwalkandi.in" target="_blank">www.ujwalkandi.in</a></span>
+        </div>
+    </header>
+    
+    <main>
+        <section>
+            <h2>Professional Summary</h2>
+            <p>Site Reliability & Observability Engineer with 3+ years of proven expertise and an M.S. in Information Technology & Management from UT Austin. Excel at transforming operational challenges into scalable solutions that drive business continuity and cost optimization across production systems. Architect monitoring and incident response frameworks reducing MTTR by 40%+, preventing 60%+ of incidents pre-impact, and maintaining 99.9% SLA compliance. Combine infrastructure automation with AI/ML for intelligent edge diagnostics, delivering measurable ROI through reliability engineering. AWS/Azure proficient across 16+ production environments with demonstrated impact in disaster recovery, distributed systems optimization, and operational efficiency improvements by 35%+.</p>
+        </section>
+        
+        <section>
+            <h2>Experience</h2>
+            
+            <div>
+                <div class="experience-header">
+                    <div>
+                        <h3>Apple Inc</h3>
+                        <h4>Metadata Operations Engineer (Contract via Welo Data)</h4>
+                    </div>
+                    <div>
+                        <h4>Jan 2025 – Present</h4>
+                        <div class="location">Austin, TX</div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Optimized mission-critical metadata ingestion pipelines ensuring 99.9%+ uptime and <2s latency for Apple TV's global content catalog using automated validation, error handling, and rollback procedures across XML workflows</li>
+                    <li>Established monitoring and alerting for metadata pipeline health to detect and triage data quality issues, reducing feed failures by 30% and improving platform stability</li>
+                    <li>Implemented structured debugging and anomaly detection frameworks to identify root causes of batch job failures, reducing mean time to resolution (MTTR) by 25% through systematic RCA and runbook development</li>
+                    <li>Designed disaster recovery procedures for critical metadata systems, ensuring continuity and compliance with Apple’s SLA requirements</li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="experience-header">
+                    <div>
+                        <h3>Sports Excitement</h3>
+                        <h4>Data Operations Engineer</h4>
+                    </div>
+                    <div>
+                        <h4>Aug 2024 – Jan 2025</h4>
+                        <div class="location">Austin, TX</div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Built and maintained production ETL pipelines using Apache Airflow (DAG orchestration, monitoring, and failure recovery), supporting 50+ daily batch jobs with 99.9% reliability</li>
+                    <li>Optimized Azure Data Lake Storage architecture, reducing query latency by 35% and improving downstream ML analytics throughput</li>
+                    <li>Automated incident notifications via Airflow trigger jobs and alerting workflows, achieving <5min response times within SLA</li>
+                    <li>Implemented data quality checks and load-testing frameworks, reducing post-deployment failures by 30%</li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="experience-header">
+                    <div>
+                        <h3>Dover Fueling Solutions</h3>
+                        <h4>Site Reliability Engineer</h4>
+                    </div>
+                    <div>
+                        <h4>Jun 2024 – Aug 2024</h4>
+                        <div class="location">Austin, TX</div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Enhanced operational observability by implementing 3-pillar monitoring strategy: configured Grafana dashboards, Azure APIM log analytics integration, and Kafka metrics exporters; reduced anomaly detection time from 15min to 3min and MTTR by 40%</li>
+                    <li>Designed and deployed agentic AI system for edge device diagnostics on resource-constrained hardware (SQLite + Ollama), enabling field technicians to resolve issues autonomously, reducing support tickets by 35% and improving MTTR for critical faults to <10min</li>
+                    <li>Utilized LangChain to prototype multi-agent configurations and employed LangSmith to evaluate agent performance, response accuracy, and token efficiency in edge inference scenarios while maintaining diagnostic accuracy under stringent 2GB memory constraints</li>
+                    <li>Implemented alert tuning and intelligent escalation workflows to reduce alert fatigue by 45% while maintaining 99.9%+ critical incident detection rate; documented best practices in runbooks for on-call rotations</li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="experience-header">
+                    <div>
+                        <h3>Stronghold Investment Management</h3>
+                        <h4>AI Engineer - Capstone Project</h4>
+                    </div>
+                    <div>
+                        <h4>Jan 2024 – May 2024</h4>
+                        <div class="location">Austin, TX</div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Designed and implemented a custom-built AI agent over Azure AI Studio, integrating OCR and LLM (Mixtral) models to enhance ownership verification processes and automate complex document workflows</li>
+                    <li>Reduced document processing costs by 20% by implementing an automated document intelligence system for document analysis</li>
+                    <li>Conducted model response evaluations across multiple Azure-hosted models using custom test datasets and task-specific tuning to benchmark performance (accuracy, coherence, latency) across query types</li>
+                    <li>Structured prompt design evaluations within Azure AI Studio to refine templates and optimize response quality with prompt tuning for document analysis workflows</li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="experience-header">
+                    <div>
+                        <h3>Epsilon</h3>
+                        <h4>Production Support Engineer</h4>
+                    </div>
+                    <div>
+                        <h4>Apr 2022 – Jul 2023</h4>
+                        <div class="location">Bengaluru, India</div>
+                    </div>
+                </div>
+                <ul>
+                    <li>Orchestrated production incident response lifecycle (detection → triage → resolution → RCA → prevention) across 16+ client systems, achieving 99.9% SLA compliance and reducing MTTR by 40% through proactive monitoring and automated remediation</li>
+                    <li>Designed and maintained comprehensive monitoring infrastructure: integrated CloudWatch, Kibana, and Dynatrace; established intelligent baselines, thresholds, and anomaly detection algorithms preventing 60% of potential incidents before customer impact</li>
+                    <li>Authored 20+ runbooks, SOPs, and postmortem documentation implementing blameless RCA culture; broke repeat incident cycles by 50% through systematic root cause prevention and knowledge transfer</li>
+                    <li>Implemented Infrastructure as Code disaster recovery framework: automated failover scripts for ETL pipelines using CloudFormation, reducing recovery time objective (RTO) from 2hrs to 30min and maintaining 99.9% uptime during critical incidents</li>
+                    <li>Optimized Matillion ETL job orchestration (SLA schedules, retry logic, maintenance windows), improving batch completion efficiency by 35% and reducing operational overhead by 40%</li>
+                    <li>Resolved critical data load failures within Epsilon’s data mart by optimizing complex batch processes, improving system performance by 89% and ensuring consistent data availability across 99.9% of daily loads</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        Powered by <a href="https://github.com/PaddlePaddle/PaddleOCR" target="_blank">PaddleOCR-VL</a> and <a href="https://huggingface.co/BAIDU" target="_blank">ERNIE</a>
+    </footer>
+</body>
+</html>
